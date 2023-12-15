@@ -1,0 +1,32 @@
+{
+  "name": "sql-injection-examples",
+  "version": "0.1.0",
+  "description": "Examples of SQL Injection",
+  "main": "app.js",
+  "scripts": {
+    "run": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lraj22/sql-injection-examples.git"
+  },
+  "keywords": [
+    "sql",
+    "injection",
+    "injection",
+    "sql",
+    "social",
+    "media",
+    "hack",
+    "examples"
+  ],
+  "author": "Lavith Raj",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lraj22/sql-injection-examples/issues"
+  },
+  "homepage": "https://github.com/lraj22/sql-injection-examples#readme",
+  "dependencies": {
+    "mysql": "^2.18.1"
+  }
+}
