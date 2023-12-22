@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lraj22/sql-injection-examples.git"
+    "url": "git+https://github.com/lraj22/sawitt-sql-injection.git"
   },
   "keywords": [
     "sql",
@@ -21,9 +21,9 @@
   "author": "Lavith Raj",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/lraj22/sql-injection-examples/issues"
+    "url": "https://github.com/lraj22/sawitt-sql-injection/issues"
   },
-  "homepage": "https://github.com/lraj22/sql-injection-examples#readme",
+  "homepage": "https://github.com/lraj22/sawitt-sql-injection#readme",
   "dependencies": {
     "mysql": "^2.18.1",
     "socket.io": "^4.7.2"
