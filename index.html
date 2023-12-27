@@ -3,12 +3,36 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Testing...</title>
+        <link rel="stylesheet" type="text/css" href="./assets/index.css">
+        <title>Sawitt</title>
     </head>
     <body>
-        <h1>some stuff here</h1>
-        <button id="button">Click to send default message</button>
+        <div id="topnav">
+            <a href="/stable/" class="btnlink" id="immune">Go to Stable Version</a>
+            <a href="/unstable/" class="btnlink" id="insecure">Go to Unstable Version</a>
+        </div>
+        <h1 id="title">Sawitt</h1>
+        <div class="infowidget">
+            <p class="iwinfo">
+                Sawitt is a new social media website that allows users to share media, as
+                the name "social media" suggests. Due to the fact that it was created in
+                December 2023, and it has not been very long since then, the features are not very
+                good, there may be bugs, &amp; you may not like the features, or lacks thereof.
+            </p>
+            <img class="iwimg" src="https://picsum.photos/id/48/1000/667">
+        </div>
+        <div class="infowidget">
+            <p class="iwinfo">
+                Though this may seem like an ordinary social media website, there are differences from
+                other social media websites. This website specifically, can be not secure. You
+                should not use this website for actual social purposes on the not secure
+                version. It is very highly recommended that if using the not secure version,
+                please use fake information. However, if you use the immune version, you
+                should be fine, as it is secure. The type of not secure: SQL Injection.
+            </p>
+            <img class="iwimg" src="https://picsum.photos/id/6/1000/667">
+        </div>
         <script src="/socket.io/socket.io.min.js"></script>
-        <script src="./index.js"></script>
+        <script src="./assets/index.js"></script>
     </body>
 </html>

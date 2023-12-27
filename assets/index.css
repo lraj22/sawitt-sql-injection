@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Dosis&display=swap');
+
+
+body {
+    font-size: 3vh;
+    font-family: Dosis;
+    margin: 0;
+    background-color: #444;
+    color: #ccc;
+    overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+    width: 1vw;
+    position: relative;
+    right: 1vw;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #999;
+    border-radius: 0.5vw;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
+
+button {
+    font: inherit;
+    color: inherit;
+}
+
+#topnav {
+    background-color: #888;
+    font-size: 2vh;
+    padding: 1vh 1vw 1vh 1vw;
+    text-align: right;
+}
+
+.btnlink {
+    text-decoration: none;
+    color: inherit;
+    background-color: #555;
+    margin: 0;
+    padding: 1vh 0.5vw 1vh 0.5vw;
+}
+
+#title {
+    font-size: 10vh;
+    text-align: center;
+    margin: 0;
+}
+
+.infowidget {
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+    border-radius: 1vh;
+    border: 2px solid #666;
+    width: 80vw;
+    height: 50vh;
+    margin-top: 3vh;
+    margin-bottom: 3vh;
+    padding: 2vh 2vw 2vh 2vw;
+    text-align: center;
+}
+
+.iwinfo {
+    width: 40vw;
+    height: 50vh;
+    position: absolute;
+    bottom: 0;
+    right: 42vw;
+    overflow: auto;
+}
+
+.iwimg {
+    width: 40vw;
+    height: 54vh;
+    position: absolute;
+    bottom: 0;
+    left: 44vw;
+    border-radius: 0 1vh 1vh 0;
+}

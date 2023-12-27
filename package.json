@@ -4,7 +4,7 @@
   "description": "Examples of SQL Injection",
   "main": "app.js",
   "scripts": {
-    "run": "node app.js"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -26,6 +26,8 @@
   "homepage": "https://github.com/lraj22/sawitt-sql-injection#readme",
   "dependencies": {
     "mysql": "^2.18.1",
-    "socket.io": "^4.7.2"
+    "path": "^0.12.7",
+    "socket.io": "^4.7.2",
+    "sqlite3": "^5.1.6"
   }
 }
