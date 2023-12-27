@@ -9,13 +9,13 @@ const notsecuredb = new sqlite.Database('./.data/sawitt-not-secure.db');
 
 const server = http.createServer(function (req, res) {
     var path = url.parse(req.url).pathname;
-    if (path.slice(-1) == "/") {
-        path += "/index.html";
+    if (path.slice(-1) == '/') {
+        path += '/index.html';
     }
     var i;
     const paths403 = [/\/\.data\/.*/];
     for (i = 0; i < paths403.length; i++) {
-        if (path.replace(paths403[i], '') === "") {
+        if (path.replace(paths403[i], '') === '') {
             res.writeHead(403);
             res.end();
         }
@@ -33,13 +33,13 @@ const server = http.createServer(function (req, res) {
 
 const io = new socketio.Server(server);
 
-io.on("connection", (socket) => {
+io.on('connection', (socket) => {
     var isImmune = !!socket.handshake.query.immune;
     // TODO: make functionality to read token for user signed-in detection
     var signedInAs = 0;
     var db = isImmune ? immunedb : notsecuredb;
     function doQuery(queryfunction, immunequery, notsecurequery, parameters, callback) { db[queryfunction](isImmune ? immunequery : (notsecurequery || immunequery), isImmune ? (parameters || []) : [], callback || function () { }); }
-    socket.on("information", function (query, callback) {
+    socket.on('information', function (query, callback) {
         var returninfo = {};
         var i;
         function replyifdone() {
@@ -49,7 +49,7 @@ io.on("connection", (socket) => {
         }
         for (i = 0; i < query.length; i++) {
             switch (query[i]) {
-                case "signedIn":
+                case 'signedIn':
                     if (!signedInAs) {
                         returninfo.signedIn = 0;
                         replyifdone();
