@@ -1,7 +1,14 @@
 var socket = io("/", {
     query: {
+        accessToken: localStorage.getItem("accessToken"),
         immune: true
     }
+});
+socket.emit("information", ["signedIn"], function (response) {
+    console.log(response);
+});
+socket.once("ISsignedIn", function (uid) {
+    console.log(uid);
 });
 /* Save this code for later...
  * socket.emit("information", ["signedIn"], function (response) {
