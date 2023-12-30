@@ -11,13 +11,13 @@ const exportedPublicKeyBuffer = publicKey.export({
     type: 'pkcs1',
     format: 'pem',
 });
-fs.writeFileSync('public-key.pem', exportedPublicKeyBuffer, 'utf-8');
+fs.writeFileSync('../public-key.pem', exportedPublicKeyBuffer, 'utf-8');
 
 const exportedPrivateKeyBuffer = privateKey.export({
     type: 'pkcs1',
     format: 'pem',
 });
-fs.writeFileSync('private.pem', exportedPrivateKeyBuffer, 'utf-8');
+fs.writeFileSync('../.data/private.pem', exportedPrivateKeyBuffer, 'utf-8');
 */
 
 
@@ -28,7 +28,7 @@ It contains more than one line and is a message.
 It is the time for something to happen.`;
 
 const privateKey = Buffer.from(
-    fs.readFileSync('private.pem', 'utf-8')
+    fs.readFileSync('../.data/private.pem', 'utf-8')
 );
 
 const encryptedData = crypto.privateEncrypt(
@@ -51,7 +51,7 @@ fs.writeFileSync('private_encrypt.txt', encryptedData.toString('base64'), {
 const encryptedData = fs.readFileSync('private_encrypt.txt', {
     encoding: 'utf-8',
 });
-const publicKey = fs.readFileSync('public-key.pem', 'utf-8');
+const publicKey = fs.readFileSync('../public-key.pem', 'utf-8');
 
 const decryptedData = crypto.publicDecrypt(
     {
@@ -69,8 +69,8 @@ fs.writeFileSync('public_decrypt.txt', decryptedData.toString('utf-8'), {
 
 
 /* Token-generating
-const privateKey = Buffer.from(fs.readFileSync('./.data/private-key.pem', 'utf-8'));
-const publicKey = Buffer.from(fs.readFileSync('./public-key.pem', 'utf-8'));
+const privateKey = Buffer.from(fs.readFileSync('../.data/private-key.pem', 'utf-8'));
+const publicKey = Buffer.from(fs.readFileSync('../public-key.pem', 'utf-8'));
 
 function prenc(data) {
     return crypto.privateEncrypt({ key: privateKey, padding: crypto.constants.RSA_PKCS1_PADDING }, Buffer.from(data));
