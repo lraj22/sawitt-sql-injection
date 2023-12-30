@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Dosis&display=swap');
+
+::-webkit-scrollbar {
+	width: 1vw;
+	position: relative;
+	right: 1vw;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #999;
+	border-radius: 0.5vw;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #777;
+}
+
+body {
+	font-size: 3vh;
+	font-family: Dosis;
+	margin: 0;
+	background-color: #444;
+	color: #ccc;
+	overflow-y: scroll;
+}
+
+button,
+input {
+	font: inherit;
+	color: inherit;
+	background-color: inherit;
+}
+
+#topnav {
+	background-color: #888;
+	font-size: 2vh;
+	padding: 1vh 1vw 1vh 1vw;
+	text-align: right;
+}
+
+.btnlink {
+	text-decoration: none;
+	color: inherit;
+	background-color: #555;
+	margin: 0;
+	padding: 1vh 0.5vw 1vh 0.5vw;
+}
+
+#title {
+	font-size: 10vh;
+	text-align: center;
+	margin: 0;
+}

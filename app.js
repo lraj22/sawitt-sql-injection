@@ -26,6 +26,7 @@ const server = http.createServer(function (req, res) {
         /\/+mutual\/+.*/
     ];
     const mutualpaths = [
+        'feed.html',
         'login.html',
         'signup.html'
     ]
@@ -43,7 +44,9 @@ const server = http.createServer(function (req, res) {
             res.writeHead(404);
             res.end();
         } else {
-            res.writeHead(200, { 'Content-Type': 'text/' + pathfunc.extname(path).substring(1) });
+            var type = pathfunc.extname(path).substring(1);
+            if (type == 'js') type = 'javascript';
+            res.writeHead(200, { 'Content-Type': 'text/' + type });
             res.end(data);
         }
     });
@@ -71,17 +74,24 @@ io.on('connection', (socket) => {
     var db = isImmune ? immunedb : notsecuredb;
     function doQuery(func, safequery, unsafequery, params, callback) { db[func](isImmune ? safequery : (unsafequery || safequery), isImmune ? (params || []) : [], callback || function () { }); }
     function logIn(info, callback) {
-        doQuery('get', 'SELECT UserID FROM Users WHERE Username = $un AND Password = $pwd', `SELECT UserID FROM Users WHERE Username = ${info.username} AND Password = ${info.password}`, {
+        if ((!info.username) || (!info.password))
+            callback({ 'token': false, 'error': 'Provide Username & Password' });
+        doQuery('get', 'SELECT UserID FROM Users WHERE Username = $un AND Password = $pwd', `SELECT UserID FROM Users WHERE Username = '${info.username}' AND Password = '${info.password}'`, {
             $un: info.username,
             $pwd: info.password
         }, function (err, row) {
-            if (err) return console.error(err);
+            if (err) {
+                callback({ 'token': false, 'error': '500 Server Error' });
+                console.error(err);
+            }
             else {
                 if (!row) {
-                    callback({ 'token': false });
+                    callback({ 'token': false, 'error': 'Incorrect Login Information' });
+                } else {
+                    console.log(row);
+                    var token = prenc(row.UserID + ';' + (Date.now() + millisecperweek));
+                    callback({ 'token': token });
                 }
-                var token = prenc(row.UserID + ';' + (Date.now() + millisecperweek));
-                callback({ 'token': token });
             }
         });
     }
@@ -95,37 +105,34 @@ io.on('connection', (socket) => {
         }
         for (i = 0; i < query.length; i++) {
             switch (query[i]) {
-                case 'signedIn':
-                    if (!signedInAs) {
-                        returninfo.signedIn = 0;
-                        replyifdone();
-                    }
-                    else {
-                        returninfo.signedIn = signedInAs;
-                        doQuery('get', 'SELECT Username FROM Users WHERE UserID = $uid', `SELECT Username FROM Users WHERE UserID = ${signedInAs}`, {
-                            $uid: signedInAs
-                        }, function (err, row) {
-                            if (err) return console.error(err);
-                            returninfo.username = row.Username;
-                            console.log(row);
-                            replyifdone();
-                        });
-                    }
-                    break;
+                /*
+                 * Currently, this socket.on is not useful. The only possible
+                 * query that had existed was called 'signedIn', where the
+                 * client asked whether or not they were signed in and as who.
+                 * Since the server sends this information on its own, that
+                 * was rendered useless. There are no other possible queries,
+                 * but the remaining uncommented & undeleted part of this
+                 * socket.on is in the syntax that it would be, with specific
+                 * queries having their own case as a string.
+                 */
             }
         }
     });
     socket.on('signUp', function (info, callback) {
-        doQuery('run', 'INSERT INTO Users (Username, Password) VALUES ($un, $pwd)', `INSERT INTO Users (Username, Password) VALUES (${info.username}, ${info.password}`, {
+        doQuery('run', 'INSERT INTO Users (Username, Password) VALUES ($un, $pwd)', `INSERT INTO Users (Username, Password) VALUES ('${info.username}', '${info.password}'`, {
             $un: info.username,
             $pwd: info.password
         }, function (err) {
-            if (err) return console.error(err);
+            if (err) {
+                if (err.code == 'SQLITE_CONSTRAINT')
+                    callback({ 'token': false, 'error': 'That username is taken.' });
+                else
+                    callback({ 'token': false, 'error': '500 Server Error' });
+            }
             else {
                 logIn(info, callback);
             }
         });
-        callback({ 'token': false });
     });
     socket.on('logIn', logIn);
 });
