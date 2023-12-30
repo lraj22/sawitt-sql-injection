@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const fs = require('fs');
 
-/* Create public and private keys
+/* Create public and private keys & write to file
 const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
     // The standard secure default length for RSA keys is 2048 bits
     modulusLength: 2048,
@@ -22,7 +22,7 @@ fs.writeFileSync('../.data/private.pem', exportedPrivateKeyBuffer, 'utf-8');
 
 
 
-/* Encrypt with private key
+/* Encrypt with private key & write to file
 const dataToEncrypt = `This is some data.
 It contains more than one line and is a message.
 It is the time for something to happen.`;
@@ -47,7 +47,7 @@ fs.writeFileSync('private_encrypt.txt', encryptedData.toString('base64'), {
 
 
 
-/* Decrypt with public key
+/* Decrypt with public key & write to file
 const encryptedData = fs.readFileSync('private_encrypt.txt', {
     encoding: 'utf-8',
 });
@@ -68,7 +68,7 @@ fs.writeFileSync('public_decrypt.txt', decryptedData.toString('utf-8'), {
 
 
 
-/* Token-generating
+/* Token-generating and console.log
 const privateKey = Buffer.from(fs.readFileSync('../.data/private-key.pem', 'utf-8'));
 const publicKey = Buffer.from(fs.readFileSync('../public-key.pem', 'utf-8'));
 
@@ -82,4 +82,16 @@ function pudec(data) {
 var userId = 4;
 var timestamp = Date.now() + 7 * 24 * 60 * 60 * 1000; // a week from now
 console.log(prenc([userId, timestamp].join(';')).toString('base64'));
+*/
+
+
+
+/*Decrypt token and console.log
+const publicKey = Buffer.from(fs.readFileSync('../public-key.pem', 'utf-8'));
+const data = 'INSERT_TOKEN';
+
+console.log(crypto.publicDecrypt({
+    key: publicKey, padding: crypto.constants.RSA_PKCS1_PADDING
+}, Buffer.from(data, 'base64')
+).toString());
 */

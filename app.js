@@ -55,17 +55,19 @@ const server = http.createServer(function (req, res) {
 const io = new socketio.Server(server);
 
 io.on('connection', (socket) => {
-    var isImmune = !!socket.handshake.query.immune;
+    var isImmune = socket.handshake.query.immune == 'true';
     var token = socket.handshake.query.accessToken;
     var signedInAs;
     try {
         var decryptedData = pudec(token).split(';');
-        if (Date.now() > parseInt(decryptedData[1])) {
-            signedInAs = false;
-            socket.emit('signedInState', 0);
-        } else {
-            signedInAs = parseInt(decryptedData[0]);
-            socket.emit('signedInState', signedInAs);
+        if (((decryptedData[0] == 's') && (isImmune)) || ((decryptedData[0] == 'u') && (!isImmune))) {
+            if (Date.now() > parseInt(decryptedData[2])) {
+                signedInAs = false;
+                socket.emit('signedInState', 0);
+            } else {
+                signedInAs = parseInt(decryptedData[1]);
+                socket.emit('signedInState', signedInAs);
+            }
         }
     } catch (e) {
         signedInAs = false;
@@ -88,8 +90,7 @@ io.on('connection', (socket) => {
                 if (!row) {
                     callback({ 'token': false, 'error': 'Incorrect Login Information' });
                 } else {
-                    console.log(row);
-                    var token = prenc(row.UserID + ';' + (Date.now() + millisecperweek));
+                    var token = prenc((isImmune ? 's' : 'u') + ';' + row.UserID + ';' + (Date.now() + millisecperweek));
                     callback({ 'token': token });
                 }
             }
