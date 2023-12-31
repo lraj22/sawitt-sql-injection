@@ -26,6 +26,7 @@ const server = http.createServer(function (req, res) {
         /\/+mutual\/+.*/
     ];
     const mutualpaths = [
+        'post.html',
         'feed.html',
         'login.html',
         'signup.html'
@@ -127,8 +128,10 @@ io.on('connection', (socket) => {
             if (err) {
                 if (err.code == 'SQLITE_CONSTRAINT')
                     callback({ 'token': false, 'error': 'That username is taken.' });
-                else
+                else {
                     callback({ 'token': false, 'error': '500 Server Error' });
+                    console.error(err);
+                }
             }
             else {
                 logIn(info, callback);
@@ -136,4 +139,30 @@ io.on('connection', (socket) => {
         });
     });
     socket.on('logIn', logIn);
+    socket.on('post', function (info, callback) {
+        if (signedInAs == info.poster) {
+            if (info.content.length > 1000) {
+                callback({ 'success': false, 'error': 'Content Too Long; Exceeds 1000 Characters' });
+            } else if (info.content.length == 0) {
+                callback({ 'success': false, 'error': 'Provide content for the Post' });
+            } else {
+                doQuery('run', 'INSERT INTO Posts (PosterID, Time, Content) VALUES ($poster, $now, $content)', `INSERT INTO Posts (PosterID, Time, Content) VALUES (${info.poster}, ${Math.round(Date.now()/1000)} ${info.content})`, {
+                    $poster: info.poster,
+                    $now: Math.round(Date.now()/1000),
+                    $content: info.content
+                }, function (err) {
+                    if (err) {
+                        callback({ 'success': false, 'error': '500 Server Error' });
+                        console.error(err);
+                    } else {
+                        callback({ 'success': true });
+                    }
+                });
+            }
+        } else if (!signedInAs) {
+            callback({ 'success': false, 'error': 'Not Signed In' });
+        } else {
+            callback({ 'success': false, 'error': 'Go Away Hacker!' });
+        }
+    });
 });

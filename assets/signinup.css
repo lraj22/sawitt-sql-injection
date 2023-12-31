@@ -1,54 +1,22 @@
 #signinupwidget {
 	position: absolute;
-	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	border-radius: 1vh;
-	border: 2px solid #666;
 	width: 30vw;
 	min-height: 10vh;
 	max-height: 40vh;
 	height: fit-content;
-	margin-top: 3vh;
-	margin-bottom: 3vh;
 	padding: 1vh 2vw 0 2vw;
-	text-align: center;
 }
 
 #username,
 #password {
 	width: 28.5vw;
 	height: 7vh;
-	padding-left: 0.5vw;
-	margin-top: 1vh;
-	margin-bottom: 1vh;
 }
 
 #continue {
 	width: 13vw;
 	min-height: 5vh;
-	height: fit-content;
 	max-height: 10vh;
-	margin-top: 1vh;
-	margin-bottom: 1vh;
-	padding: 2%;
-	box-sizing: border-box;
-	background-color: inherit;
-	border-radius: 1vh;
-}
-
-#status {
-	min-height: 3vh;
-	height: fit-content;
-	max-height: 6vh;
-	margin-top: 1vh;
-	margin-bottom: 1vh;
-}
-
-#status.load {
-	color: #666;
-}
-
-#status.fail {
-	color: #f22;
 }

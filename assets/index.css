@@ -1,31 +1,29 @@
 .infowidget {
-    position: relative;
-    left: 50%;
-    transform: translate(-50%, 0);
-    border-radius: 1vh;
-    border: 2px solid #666;
-    width: 80vw;
-    height: 50vh;
-    margin-top: 3vh;
-    margin-bottom: 3vh;
-    padding: 2vh 2vw 2vh 2vw;
-    text-align: center;
+	position: relative;
+	transform: translate(-50%, 0);
+	width: 80vw;
+	height: 50vh;
+	padding: 2vh 2vw 2vh 2vw;
+}
+
+.infowidget>* {
+	margin: 0 !important;
 }
 
 .iwinfo {
-    width: 40vw;
-    height: 50vh;
-    position: absolute;
-    bottom: 0;
-    right: 42vw;
-    overflow: auto;
+	width: 40vw;
+	height: 50vh;
+	position: absolute;
+	bottom: 0;
+	right: 42vw;
+	overflow: auto;
 }
 
 .iwimg {
-    width: 40vw;
-    height: 54vh;
-    position: absolute;
-    bottom: 0;
-    left: 44vw;
-    border-radius: 0 1vh 1vh 0;
+	width: 40vw;
+	height: 54vh;
+	position: absolute;
+	bottom: 0;
+	left: 44vw;
+	border-radius: 0 1vh 1vh 0;
 }

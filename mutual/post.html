@@ -4,6 +4,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" type="text/css" href="/assets/common.css">
+		<link rel="stylesheet" type="text/css" href="/assets/post.css">
 		<title>Nothing Yet...</title>
 	</head>
 	<body>
@@ -11,8 +12,14 @@
 			<a class="btnlink" href="/">Go to Homepage</a>
 			<a class="btnlink" href="./">Go to this homepage</a>
 		</div>
+		<h1 id="title">Create a Post</h1>
+		<div id="postwidget" class="widget">
+			<textarea id="content" placeholder="Content of your post. Maximum length 1000 characters"></textarea>
+			<button id="post">Create Post</button>
+			<div id="status"></div>
+		</div>
 		<script src="/socket.io/socket.io.min.js"></script>
 		<script src="/assets/common.js"></script>
-		<script src="/assets/mutualindex.js"></script>
+		<script src="/assets/post.js"></script>
 	</body>
 </html>

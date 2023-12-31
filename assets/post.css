@@ -1,0 +1,20 @@
+#postwidget {
+	position: absolute;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 30vw;
+	min-height: 20vh;
+	max-height: 60vh;
+	height: fit-content;
+	padding: 1vh 2vw 0 2vw;
+}
+
+#content {
+	width: 30vw;
+	height: 16vh;
+	resize: none;
+}
+
+#post {
+	width: 13vw;
+}

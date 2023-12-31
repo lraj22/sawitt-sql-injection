@@ -3,8 +3,8 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="/assets/common.css">
-        <link rel="stylesheet" type="text/css" href="/assets/signinup.css">
+		<link rel="stylesheet" type="text/css" href="/assets/common.css">
+		<link rel="stylesheet" type="text/css" href="/assets/signinup.css">
 		<title>Sign Up</title>
 	</head>
 	<body>
@@ -13,14 +13,15 @@
 			<a href="./login.html" class="btnlink">Already have an account? Log in</a>
 		</div>
 		<h1 id="title">Sign Up</h1>
-		<div id="signinupwidget">
+		<div id="signinupwidget" class="widget">
 			<input type="text" id="username" placeholder="Username">
 			<br>
 			<input type="password" id="password" placeholder="Password">
 			<button id="continue">Sign Up</button>
 			<div id="status"></div>
 		</div>
-        <script src="/socket.io/socket.io.min.js"></script>
-        <script src="/assets/signinup.js"></script>
+		<script src="/socket.io/socket.io.min.js"></script>
+		<script src="/assets/common.js"></script>
+		<script src="/assets/signinup.js"></script>
 	</body>
 </html>

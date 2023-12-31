@@ -29,10 +29,23 @@ body {
 }
 
 button,
-input {
+input,
+textarea {
 	font: inherit;
 	color: inherit;
 	background-color: inherit;
+}
+
+button {
+	border-radius: 1vh;
+	padding: 2%;
+	box-sizing: border-box;
+	height: fit-content;
+}
+
+input,
+textarea {
+	padding-left: 0.5vw;
 }
 
 #topnav {
@@ -54,4 +67,32 @@ input {
 	font-size: 10vh;
 	text-align: center;
 	margin: 0;
+}
+
+.widget {
+	left: 50%;
+	border-radius: 1vh;
+	border: 2px solid #666;
+	text-align: center;
+	margin-top: 3vh;
+	margin-bottom: 3vh;
+}
+
+.widget>* {
+	margin-top: 1vh;
+	margin-bottom: 1vh;
+}
+
+#status {
+	min-height: 3vh;
+	height: fit-content;
+	max-height: 6vh;
+}
+
+#status.load {
+	color: #666;
+}
+
+#status.fail {
+	color: #f22;
 }

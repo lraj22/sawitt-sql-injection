@@ -1,17 +1,8 @@
-var immune = location.pathname.split(/\/+/)[1] == "stable";
-var tokenName = (immune ? "" : "un") + "stableAccessToken"
-var socket = io("/", {
-	query: {
-		"accessToken": localStorage.getItem(tokenName),
-		"immune": immune
-	}
-});
 var username = document.getElementById("username");
 var password = document.getElementById("password");
 var signinup = document.getElementById("continue");
 var statusEl = document.getElementById("status");
 var pagetype = location.href.split("/")[location.href.split("/").length - 1].split(".")[0] == "login" ? "logIn" : "signUp";
-console.log(pagetype);
 socket.once("signedInState", function (uid) {
 	if (uid) {
 		location.href = "./feed.html";
