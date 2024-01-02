@@ -34,11 +34,11 @@ textarea {
 	font: inherit;
 	color: inherit;
 	background-color: inherit;
+	border-width: 0.3vh;
 }
 
 button {
 	border-radius: 1vh;
-	padding: 2%;
 	box-sizing: border-box;
 	height: fit-content;
 }
@@ -46,6 +46,10 @@ button {
 input,
 textarea {
 	padding-left: 0.5vw;
+}
+
+textarea {
+	resize: none
 }
 
 #topnav {
@@ -72,7 +76,7 @@ textarea {
 .widget {
 	left: 50%;
 	border-radius: 1vh;
-	border: 2px solid #666;
+	border: 0.5vh solid #666;
 	text-align: center;
 	margin-top: 3vh;
 	margin-bottom: 3vh;
@@ -84,7 +88,7 @@ textarea {
 }
 
 #status {
-	min-height: 3vh;
+	min-height: 1vh;
 	height: fit-content;
 	max-height: 6vh;
 }

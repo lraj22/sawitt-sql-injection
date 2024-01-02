@@ -1,12 +1,17 @@
 const sqlite = require('sqlite3').verbose();
 const immunedb = new sqlite.Database('../.data/sawitt-immune.db');
 const notsecuredb = new sqlite.Database('../.data/sawitt-not-secure.db');
+const droptables = [
+    'Users',
+    'Posts',
+    'Follows'
+];
 
-immunedb.run(`DROP TABLE Users;
-DROP TABLE Posts;`, [], function (err) {
-    if (err) throw err;
-});
-notsecuredb.run(`DROP TABLE Users;
-DROP TABLE Posts;`, [], function (err) {
-    if (err) throw err;
+droptables.forEach(function (tablename) {
+    immunedb.run(`DROP TABLE ${tablename};`, [], function (err) {
+        if (err) throw err;
+    });
+    notsecuredb.run(`DROP TABLE ${tablename};`, [], function (err) {
+        if (err) throw err;
+    });
 });

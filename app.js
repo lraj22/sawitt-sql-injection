@@ -30,27 +30,71 @@ const server = http.createServer(function (req, res) {
         'feed.html',
         'login.html',
         'signup.html'
-    ]
+    ];
     for (i = 0; i < paths403.length; i++) {
         if (path.replace(paths403[i], '') === '') {
             res.writeHead(403);
             res.end();
         }
     }
-    if (mutualpaths.includes(path.replace(/\/+(un)?stable\/+(.*)/, '$2'))) {
-        path = path.replace(/\/+(un)?stable\/+(.*)/, '/mutual/$2');
-    }
-    fs.readFile(__dirname + path, function (err, data) {
-        if (err) {
-            res.writeHead(404);
-            res.end();
-        } else {
-            var type = pathfunc.extname(path).substring(1);
-            if (type == 'js') type = 'javascript';
-            res.writeHead(200, { 'Content-Type': 'text/' + type });
-            res.end(data);
+    var isImmune = path.replace(/^\/+((un)?stable)\/+profile\/(\d+)\/+index\.html$/, '$1') == 'stable';
+    var uid = parseInt(path.replace(/^\/+(un)?stable\/+profile\/(\d+)\/+index\.html$/, '$2'));
+    if (uid) {
+        (isImmune ? immunedb : notsecuredb).get(isImmune ? 'SELECT Username, AboutME FROM Users WHERE UserID = $uid' : `SELECT Username, AboutME FROM Users WHERE UserID = ${uid}`, isImmune ? {
+            $uid: uid
+        } : [], function (err, row) {
+            if (err) console.error(err);
+            if (!row) {
+                res.writeHead(404);
+                res.end();
+            } else {
+                (isImmune ? immunedb : notsecuredb).all(isImmune ? 'SELECT FollowerID FROM Follows WHERE FollowedID = $uid' : `SELECT FollowerID FROM Follows WHERE FollowedID = ${uid}`, isImmune ? {
+                    $uid: uid
+                } : [], function (err, follows) {
+                    if (err) console.error(err);
+                    (isImmune ? immunedb : notsecuredb).get(isImmune ? 'SELECT Time, Content, Likes FROM Posts WHERE PosterID = $uid ORDER BY Time DESC' : `SELECT Time, Content, Likes FROM Posts WHERE PosterID = ${uid} ORDER BY Time DESC`, isImmune ? {
+                        $uid: uid
+                    } : [], function (err, post) {
+                        if (err) console.error(err);
+                        fs.readFile(__dirname + '/mutual/profile.html', function (err, data) {
+                            if (err) {
+                                res.writeHead(500);
+                                res.end();
+                            } else {
+                                res.writeHead(200, { 'Content-Type': 'text/html' });
+                                res.end(data.toString().split('☺♣○♦◘☻♠•♥').join(JSON.stringify({
+                                    uid: uid,
+                                    un: row.Username,
+                                    aboutme: row.AboutME,
+                                    follows: follows.length,
+                                    postDetails: post ? {
+                                        content: post.Content,
+                                        time: (post.Time) * 1000,
+                                        likes: post.Likes
+                                    } : false
+                                })));
+                            }
+                        });
+                    });
+                });
+            }
+        });
+    } else {
+        if (mutualpaths.includes(path.replace(/\/+(un)?stable\/+(.*)/, '$2'))) {
+            path = path.replace(/\/+(un)?stable\/+(.*)/, '/mutual/$2');
         }
-    });
+        fs.readFile(__dirname + path, function (err, data) {
+            if (err) {
+                res.writeHead(404);
+                res.end();
+            } else {
+                var type = pathfunc.extname(path).substring(1);
+                if (type == 'js') type = 'javascript';
+                res.writeHead(200, { 'Content-Type': 'text/' + type });
+                res.end(data);
+            }
+        });
+    }
 }).listen(process.env.PORT || 8080);
 
 const io = new socketio.Server(server);
@@ -121,11 +165,15 @@ io.on('connection', (socket) => {
         }
     });
     socket.on('signUp', function (info, callback) {
-        doQuery('run', 'INSERT INTO Users (Username, Password) VALUES ($un, $pwd)', `INSERT INTO Users (Username, Password) VALUES ('${info.username}', '${info.password}'`, {
+        if ((!info.username) || (!info.password))
+            callback({ 'token': false, 'error': 'Provide Username & Password' });
+        doQuery('run', 'INSERT INTO Users (Username, Password, AboutME) VALUES ($un, $pwd, $abtme)', `INSERT INTO Users (Username, Password, AboutME) VALUES ('${info.username}', '${info.password}', '${info.aboutme}')`, {
             $un: info.username,
-            $pwd: info.password
+            $pwd: info.password,
+            $abtme: info.aboutme
         }, function (err) {
             if (err) {
+                console.error(err);
                 if (err.code == 'SQLITE_CONSTRAINT')
                     callback({ 'token': false, 'error': 'That username is taken.' });
                 else {
@@ -146,9 +194,9 @@ io.on('connection', (socket) => {
             } else if (info.content.length == 0) {
                 callback({ 'success': false, 'error': 'Provide content for the Post' });
             } else {
-                doQuery('run', 'INSERT INTO Posts (PosterID, Time, Content) VALUES ($poster, $now, $content)', `INSERT INTO Posts (PosterID, Time, Content) VALUES (${info.poster}, ${Math.round(Date.now()/1000)} ${info.content})`, {
+                doQuery('run', 'INSERT INTO Posts (PosterID, Time, Content) VALUES ($poster, $now, $content)', `INSERT INTO Posts (PosterID, Time, Content) VALUES (${info.poster}, ${Math.round(Date.now() / 1000)} ${info.content})`, {
                     $poster: info.poster,
-                    $now: Math.round(Date.now()/1000),
+                    $now: Math.round(Date.now() / 1000),
                     $content: info.content
                 }, function (err) {
                     if (err) {

@@ -3,20 +3,30 @@
 	top: 50%;
 	transform: translate(-50%, -50%);
 	width: 30vw;
-	min-height: 10vh;
-	max-height: 40vh;
+	min-height: 30vh;
+	max-height: 60vh;
 	height: fit-content;
 	padding: 1vh 2vw 0 2vw;
 }
 
 #username,
-#password {
+#password,
+#aboutme {
 	width: 28.5vw;
+}
+
+#username,
+#password {
 	height: 7vh;
+}
+
+#aboutme{
+	height: 10vh;
 }
 
 #continue {
 	width: 13vw;
 	min-height: 5vh;
 	max-height: 10vh;
+	padding: 2%;
 }

@@ -1,0 +1,126 @@
+.username {
+	color: #7f7;
+}
+
+#infowidget {
+	position: absolute;
+	top: 55%;
+	transform: translate(-50%, -50%);
+	width: 80vw;
+	height: 75vh;
+}
+
+#followsection {
+	position: relative;
+	left: 50%;
+	transform: translate(-50%, 0%);
+	border: 0.5vh solid #666;
+	border-radius: 1vh;
+	box-sizing: border-box;
+	padding: 1%;
+	width: 98%;
+}
+
+#follow {
+	padding: 1%;
+}
+
+#follows {
+	margin-left: 1%;
+	color: #ff7;
+}
+
+#aboutsection,
+#postsection {
+	position: absolute;
+	transform: translate(-50%, 0%);
+	border: 0.5vh solid #666;
+	border-radius: 1vh;
+	box-sizing: border-box;
+	display: inline-block;
+	height: 60vh;
+	width: 48%;
+	margin: 0;
+	padding: 2%;
+}
+
+#aboutsection {
+	left: 25%;
+}
+
+#abtthisuser,
+#latestpost {
+	font-size: 4vh;
+	margin: 0;
+}
+
+#aboutme {
+	margin-top: 1vh;
+	color: #77f;
+}
+
+#postsection {
+	left: 75%;
+}
+
+#post {
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%, 0%);
+	margin-top: 5vh;
+	width: 32vw;
+	height: 40vh;
+	border: 0.5vh solid #666;
+	border-radius: 1vh;
+	box-sizing: border-box;
+}
+
+.topsection,
+.bottomsection {
+	position: absolute;
+	width: 100%;
+	height: 4vh;
+	box-sizing: border-box;
+}
+
+.topsection {
+	top: 0;
+	border-bottom: 0.5vh solid #666;
+}
+
+.posterusername,
+.like {
+	position: absolute;
+	left: 1%;
+	height: 4vh;
+}
+
+.posttime,
+.likes {
+	position: absolute;
+	right: 1%;
+}
+
+.content {
+	position: absolute;
+	top: 8vh;
+	left: 50%;
+	transform: translate(-50%, 0%);
+	width: 80%;
+	overflow-y: scroll;
+}
+
+.bottomsection {
+	bottom: 0;
+	border-top: 0.5vh solid #666;
+}
+
+.like {
+	font-size: 2.4vh;
+	padding-top: 0;
+	padding-bottom: 0;
+	height: 3.2vh;
+	top: 50%;
+	transform: translate(0, -50%);
+	width: 4vw;
+}

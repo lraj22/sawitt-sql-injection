@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<script>var profileinfo = JSON.parse('☺♣○♦◘☻♠•♥');</script>
+		<link rel="stylesheet" type="text/css" href="/assets/common.css">
+		<link rel="stylesheet" type="text/css" href="/assets/profile.css">
+		<title>Profile</title>
+	</head>
+	<body>
+		<div id="topnav">
+			<a class="btnlink" href="/">Go to Homepage</a>
+			<a class="btnlink" href="./">Go to this homepage</a>
+		</div>
+		<h1 id="title">Profile of <span class="username"></span></h1>
+		<div id="infowidget" class="widget">
+			<div id="followsection">
+				<button id="follow">Follow this user</button>
+				<span id="follows"></span> Followers
+			</div>
+			<div id="aboutsection">
+				<p id="abtthisuser">About <span class="username"></span></p>
+				<p id="aboutme"></p>
+			</div>
+			<div id="postsection">
+				<p id="latestpost"><span class="username"></span>'s Latest Post</p>
+				<div id="post"></div>
+			</div>
+		</div>
+		<script src="/socket.io/socket.io.min.js"></script>
+		<script src="/assets/common.js"></script>
+		<script src="/assets/profile.js"></script>
+	</body>
+</html>
