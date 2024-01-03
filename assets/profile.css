@@ -19,6 +19,9 @@
 	box-sizing: border-box;
 	padding: 1%;
 	width: 98%;
+	min-height: 6vh;
+	height: fit-content;
+	max-height: 19vh;
 }
 
 #follow {
@@ -26,7 +29,6 @@
 }
 
 #follows {
-	margin-left: 1%;
 	color: #ff7;
 }
 
@@ -122,5 +124,7 @@
 	height: 3.2vh;
 	top: 50%;
 	transform: translate(0, -50%);
-	width: 4vw;
+	min-width: 4vw;
+	width: fit-content;
+	max-width: 6vw;
 }

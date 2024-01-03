@@ -3,6 +3,35 @@ var username = profileinfo.un;
 var aboutme = profileinfo.aboutme;
 var follows = profileinfo.follows;
 var postDetails = profileinfo.postDetails;
+socket.once("signedInState", function (signedIn) {
+	if ((signedIn) && (signedIn != uid)) {
+		allowFollow(signedIn);
+	}
+});
+function allowFollow(signedIn) {
+	var follow = document.createElement("button");
+	var isFollowing;
+	socket.emit("information", { "isFollowing": [signedIn, uid] }, function (response) {
+		if (response.err) console.error(err);
+		else {
+			isFollowing = response.isFollowing;
+			follow.innerText = (isFollowing ? "Unf" : "F") + "ollow this user";
+		}
+	});
+	follow.id = "follow";
+	follow.innerText = (isFollowing ? "Unf" : "F") + "ollow this user";
+	document.getElementById("followsection").appendChild(follow);
+	follow.onclick = function () {
+		socket.emit("follow", [signedIn, uid], function (response) {
+			if (response.success) {
+				document.getElementById("follows").innerText = follows = response.follows;
+				isFollowing = response.isFollowing;
+				follow.innerText = (isFollowing ? "Unf" : "F") + "ollow this user";
+				document.getElementById("theword").innerText = " Follower" + (follows === 1 ? "" : "s");
+			}
+		});
+	}
+}
 var usernames = document.getElementsByClassName("username");
 for (var i = 0; i < usernames.length; i++) {
 	usernames[i].innerText = username;
@@ -10,6 +39,7 @@ for (var i = 0; i < usernames.length; i++) {
 if (aboutme) document.getElementById("aboutme").innerText = aboutme;
 else document.getElementById("aboutme").innerHTML = "<i>This user does not have an about me</i>";
 document.getElementById("follows").innerText = follows;
+document.getElementById("theword").innerText = " Follower" + (follows === 1 ? "" : "s");
 if (!postDetails) document.getElementById("post").innerHTML = "<i>This user does not have any posts</i>";
 else {
 	var post = document.getElementById("post");
