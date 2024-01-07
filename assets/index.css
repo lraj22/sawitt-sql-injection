@@ -3,7 +3,8 @@
 	transform: translate(-50%, 0);
 	width: 80vw;
 	height: 50vh;
-	padding: 2vh 2vw 2vh 2vw;
+	padding: 0;
+	overflow: hidden;
 }
 
 .infowidget>* {
@@ -15,8 +16,11 @@
 	height: 50vh;
 	position: absolute;
 	bottom: 0;
-	right: 42vw;
+	left: 25%;
+	transform: translate(-50%, 0%);
 	overflow: auto;
+	padding: 2vh 2vw 2vh 2vw;
+	box-sizing: border-box;
 }
 
 .iwimg {
@@ -24,6 +28,8 @@
 	height: 54vh;
 	position: absolute;
 	bottom: 0;
-	left: 44vw;
+	left: 75%;
+	transform: translate(-50%, 0%);
 	border-radius: 0 1vh 1vh 0;
+	box-sizing: border-box;
 }

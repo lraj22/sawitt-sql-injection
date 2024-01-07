@@ -1,6 +1,6 @@
 {
   "name": "sql-injection-examples",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Examples of SQL Injection",
   "main": "app.js",
   "scripts": {

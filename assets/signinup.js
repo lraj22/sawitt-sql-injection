@@ -5,11 +5,7 @@ var signinup = document.getElementById("continue");
 var statusEl = document.getElementById("status");
 var pagetype = location.href.split("/")[location.href.split("/").length - 1].split(".")[0] == "login" ? "logIn" : "signUp";
 socket.once("signedInState", function (uid) {
-	if (uid) {
-		location.href = "./feed.html";
-	}
-	else
-		console.log("Not signed in");
+	if (uid) location.href = "./";
 });
 username.onkeyup = function (event) {
 	if (event.key == "Enter") password.focus();
@@ -32,11 +28,11 @@ signinup.onclick = function () {
 	socket.emit(pagetype, { username: user, password: pwd, aboutme: aboutmeval }, function (response) {
 		if (response.token) {
 			localStorage.setItem(tokenName, response.token);
-			location.href = "./feed.html";
+			location.href = "./";
 		}
 		else {
 			statusEl.innerHTML = "ERROR: " + response.error;
 			statusEl.className = "fail";
 		}
 	});
-}
+};

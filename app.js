@@ -27,7 +27,7 @@ const server = http.createServer(function (req, res) {
 	];
 	const mutualpaths = [
 		'post.html',
-		'feed.html',
+		'index.html',
 		'login.html',
 		'signup.html'
 	];
@@ -262,5 +262,17 @@ io.on('connection', (socket) => {
 				});
 			}
 		});
+	});
+	socket.on('delaccount', function (info, callback) {
+		if (info === signedInAs) {
+			doQuery('run', 'DELETE FROM Users WHERE UserID = $uid', `DELETE FROM Users WHERE UserID = ${signedInAs}`, {
+				$uid: signedInAs
+			}, function (err) {
+				if (err) {
+					console.error(err);
+					callback(false);
+				} else callback(true);
+			})
+		}
 	});
 });

@@ -2,8 +2,7 @@
 
 ::-webkit-scrollbar {
 	width: 1vw;
-	position: relative;
-	right: 1vw;
+	height: 1vh;
 }
 
 ::-webkit-scrollbar-track {
@@ -25,7 +24,6 @@ body {
 	margin: 0;
 	background-color: #444;
 	color: #ccc;
-	overflow-y: scroll;
 }
 
 button,
@@ -71,6 +69,8 @@ textarea {
 	font-size: 10vh;
 	text-align: center;
 	margin: 0;
+	height: 13vh;
+	overflow-y: scroll;
 }
 
 .widget {
@@ -85,6 +85,35 @@ textarea {
 .widget>* {
 	margin-top: 1vh;
 	margin-bottom: 1vh;
+	overflow-y: scroll;
+}
+
+.popupoverlay {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100vh;
+	background-color: #0000007f;
+	z-index: 10;
+}
+
+.popup {
+	position: absolute;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 25vw;
+	height: 25vh;
+	background-color: #444;
+	z-index: 11;
+}
+
+.popuptitle {
+	font-size: 5vh;
+}
+
+.popupinput {
+	width: 20vw;
 }
 
 #status {
