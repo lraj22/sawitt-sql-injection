@@ -32,4 +32,5 @@
 	transform: translate(-50%, 0%);
 	border-radius: 0 1vh 1vh 0;
 	box-sizing: border-box;
+	object-fit: cover;
 }
