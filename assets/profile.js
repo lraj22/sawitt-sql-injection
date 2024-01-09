@@ -3,12 +3,14 @@ var username = profileinfo.un;
 var aboutme = profileinfo.aboutme;
 var follows = profileinfo.follows;
 var postDetails = profileinfo.postDetails;
-socket.once("signedInState", function (signedIn) {
-	if ((signedIn) && (signedIn != uid)) {
-		allowFollow(signedIn);
-	} else if ((signedIn) && (signedIn == uid)) {
-		profileSettings(signedIn);
+var signedIn = null;
+socket.once("signedInState", function (userID) {
+	if ((userID) && (userID != uid)) {
+		allowFollow(userID);
+	} else if ((userID) && (userID == uid)) {
+		profileSettings(userID);
 	}
+	if (userID) signedIn = userID;
 });
 function allowFollow(signedIn) {
 	var follow = document.createElement("button");
@@ -51,12 +53,14 @@ else {
 	var bottomsection = document.createElement("div");
 	var like = document.createElement("button");
 	var likes = document.createElement("span");
+	var AMPM = time.getHours() % 12 == time.getHours() ? "AM" : "PM";
+	var numoflikes = postDetails.likes;
+	var isLiked;
 	topsection.className = "topsection";
 	post.appendChild(topsection);
 	poster.className = "posterusername";
 	poster.innerText = username;
 	topsection.appendChild(poster);
-	var AMPM = time.getHours() % 12 == time.getHours() ? "AM" : "PM";
 	postTime.className = "posttime";
 	postTime.innerText = (time.getMonth() + 1) + "/" + time.getDate() + "/" + time.getFullYear() + " " + (time.getHours() % 12).toString().padStart(2, "0") + ":" + time.getMinutes().toString().padStart(2, "0") + ":" + time.getSeconds().toString().padStart(2, "0") + " " + AMPM;
 	topsection.appendChild(postTime);
@@ -69,8 +73,26 @@ else {
 	like.innerText = "Like";
 	bottomsection.appendChild(like);
 	likes.className = "likes";
-	likes.innerText = postDetails.likes + " likes";
+	likes.innerText = numoflikes + " Like" + (numoflikes === 1 ? "" : "s");
 	bottomsection.appendChild(likes);
+	socket.emit("information", { "isLiked": [signedIn, postDetails.postID] }, function (response) {
+		if (response.err) console.error(err);
+		else {
+			isLiked = response.isFollowing;
+			like.innerText = "Like" + (isLiked ? "d" : "");
+		}
+	});
+	like.innerText = "Like" + (isLiked ? "d" : "");
+	like.onclick = function () {
+		socket.emit("like", [signedIn, postDetails.postID], function (response) {
+			if (response.success) {
+				numoflikes = response.likes;
+				isLiked = response.isLiked;
+				like.innerText = "Like" + (isLiked ? "d" : "");
+				likes.innerText = numoflikes + " Like" + (numoflikes === 1 ? "" : "s");
+			}
+		});
+	};
 }
 function profileSettings(signedIn) {
 	document.getElementById("profbtn").remove();

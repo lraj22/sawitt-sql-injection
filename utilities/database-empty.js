@@ -5,7 +5,7 @@ const droptables = [
 	'Users',
 	'Posts',
 	'Follows',
-	'UsersBAK'
+	'Likes'
 ];
 
 droptables.forEach(function (tablename) {

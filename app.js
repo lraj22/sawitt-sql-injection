@@ -52,28 +52,34 @@ const server = http.createServer(function (req, res) {
 					$uid: uid
 				} : [], function (err, follows) {
 					if (err) console.error(err);
-					(isImmune ? immunedb : notsecuredb).get(isImmune ? 'SELECT Time, Content, Likes FROM Posts WHERE PosterID = $uid ORDER BY Time DESC' : `SELECT Time, Content, Likes FROM Posts WHERE PosterID = ${uid} ORDER BY Time DESC`, isImmune ? {
+					(isImmune ? immunedb : notsecuredb).get(isImmune ? 'SELECT PostID, Time, Content FROM Posts WHERE PosterID = $uid ORDER BY Time DESC LIMIT 1' : `SELECT PostID, Time, Content FROM Posts WHERE PosterID = ${uid} ORDER BY Time DESC LIMIT 1`, isImmune ? {
 						$uid: uid
 					} : [], function (err, post) {
 						if (err) console.error(err);
-						fs.readFile(__dirname + '/mutual/profile.html', function (err, data) {
-							if (err) {
-								res.writeHead(500);
-								res.end();
-							} else {
-								res.writeHead(200, { 'Content-Type': 'text/html' });
-								res.end(data.toString().split('☺♣○♦◘☻♠•♥').join(JSON.stringify({
-									uid: uid,
-									un: row.Username,
-									aboutme: row.AboutME,
-									follows: follows.length,
-									postDetails: post ? {
-										content: post.Content,
-										time: (post.Time) * 1000,
-										likes: post.Likes
-									} : false
-								}).split('`').join('\\`').split('\\').join('\\\\')));
-							}
+						(isImmune ? immunedb : notsecuredb).all(isImmune ? 'SELECT LikerID FROM Likes WHERE PostID = $postID' : `SELECT LikerID FROM Likes WHERE PostID = ${post ? post.PostID : undefined}`, isImmune ? {
+							$postID: post ? post.PostID : undefined
+						} : [], function (err, likes) {
+							if (err) console.error(err);
+							fs.readFile(__dirname + '/mutual/profile.html', function (err, data) {
+								if (err) {
+									res.writeHead(500);
+									res.end();
+								} else {
+									res.writeHead(200, { 'Content-Type': 'text/html' });
+									res.end(data.toString().split('☺♣○♦◘☻♠•♥').join(JSON.stringify({
+										uid: uid,
+										un: row.Username,
+										aboutme: row.AboutME,
+										follows: follows.length,
+										postDetails: post ? {
+											postID: post.PostID,
+											content: post.Content,
+											time: (post.Time) * 1000,
+											likes: likes.length
+										} : false
+									}).split('`').join('\\`').split('\\').join('\\\\')));
+								}
+							});
 						});
 					});
 				});
@@ -154,13 +160,24 @@ io.on('connection', (socket) => {
 		for (i = 0; i < Object.keys(query).length; i++) {
 			switch (Object.keys(query)[i]) {
 				case 'isFollowing':
-					doQuery('get', 'SELECT FollowerID, FollowedID FROM Follows WHERE FollowerID = $follower AND FollowedID = $followed', `SELECT FollowerID, FollowedID FROM Follows WHERE FollowerID = ${signedInAs} AND FollowedID = ${query[Object.keys(query)[i]]}`, {
+					doQuery('get', 'SELECT FollowerID, FollowedID FROM Follows WHERE FollowerID = $follower AND FollowedID = $followed', `SELECT FollowerID, FollowedID FROM Follows WHERE FollowerID = ${signedInAs} AND FollowedID = ${query[Object.keys(query)[i]][1]}`, {
 						$follower: signedInAs,
 						$followed: query[Object.keys(query)[i]][1]
 					}, function (err, row) {
 						if (err) console.error(err);
 						if (row) returninfo.isFollowing = true;
 						else returninfo.isFollowing = false;
+						callback(returninfo);
+					});
+					break;
+				case 'isLiked':
+					doQuery('get', 'SELECT LikerID, PostID FROM Likes WHERE LikerID = $liker AND PostID = $postID', `SELECT LikerID, PostID FROM Likes WHERE LikerID = ${query[Object.keys(query)[i]][0]} AND PostID = ${query[Object.keys(query)[i]][1]}`, {
+						$liker: query[Object.keys(query)[i]][0],
+						$postID: query[Object.keys(query)[i]][1]
+					}, function (err, row) {
+						if (err) console.error(err);
+						if (row) returninfo.isLiked = true;
+						else returninfo.isLiked = false;
 						callback(returninfo);
 					});
 					break;
@@ -274,5 +291,86 @@ io.on('connection', (socket) => {
 				} else callback(true);
 			})
 		}
+	});
+	socket.on('getPosts', function (info, callback) {
+		var username, results = [];
+		doQuery('get', 'SELECT Username FROM Users WHERE UserID = $id', `SELECT Username FROM Users WHERE UserID = ${info}`, {
+			$id: info
+		}, function (err, row) {
+			if (err) callback({ err: true });
+			else if (!row) callback({ err: true });
+			else username = row.Username;
+		});
+		db.each('SELECT * FROM Posts ORDER BY Time DESC LIMIT 10', [], function (err, row) {
+			if (err) callback({ err: true });
+			else if (row) {
+				doQuery('get', 'SELECT Username FROM Users WHERE UserID = $id', `SELECT Username FROM Users WHERE UserID = ${row.PosterID}`, {
+					$id: row.PosterID
+				}, function (err, un) {
+					if (err) callback({ err: true });
+					else if (un) {
+						results.push({
+							uid: row.PosterID,
+							username: un.Username,
+							postID: row.PostID,
+							time: row.Time * 1000,
+							content: row.Content,
+							likes: row.Likes
+						});
+					}
+				});
+			}
+		}, function (err) {
+			if (err) callback({ err: true });
+			else var interval = setInterval(() => { if (results) { callback({ posts: results }); clearInterval(interval); } }, 1000);
+		});
+	});
+	socket.on('like', function (info, callback) {
+		var liker = info[0];
+		var postID = info[1];
+		doQuery('get', 'SELECT LikerID, PostID FROM Likes WHERE LikerID = $liker AND PostID = $postID', `SELECT LikerID, PostID FROM Likes WHERE LikerID = ${liker} AND PostID = ${postID}`, {
+			$liker: liker,
+			$postID: postID
+		}, function (err, row) {
+			function likeCont(err, isLiked) {
+				if (err) {
+					console.error(err);
+					callback({ 'success': false });
+				} else {
+					doQuery('all', 'SELECT LikerID FROM Likes WHERE PostID = $postID', `SELECT LikerID FROM Likes WHERE PostID = ${postID}`, {
+						$postID: postID
+					}, function (error, likes) {
+						if (error) {
+							console.error(error);
+							callback({ 'success': false });
+						} else {
+							callback({
+								'success': true,
+								'likes': likes.length,
+								'isLiked': isLiked
+							});
+						}
+					});
+				}
+			}
+			if (err) {
+				console.error(err);
+				callback({ 'success': false });
+			} else if (row) {
+				doQuery('run', 'DELETE FROM Likes WHERE LikerID = $liker AND PostID = $postID', `DELETE FROM Likes WHERE LikerID = ${liker} AND PostID = ${postID}`, {
+					$liker: liker,
+					$postID: postID
+				}, function (err) {
+					likeCont(err, false);
+				});
+			} else {
+				doQuery('run', 'INSERT INTO Likes (LikerID, PostID) VALUES ($liker, $postID)', `INSERT INTO Likes VALUES (${liker}, ${postID})`, {
+					$liker: liker,
+					$postID: postID
+				}, function (err) {
+					likeCont(err, true);
+				});
+			}
+		});
 	});
 });

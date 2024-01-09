@@ -8,11 +8,22 @@ var socket = io("/", {
 });
 socket.once("signedInState", function (uid) {
 	if (uid) {
-		var profilebutton = document.createElement("a");
-		profilebutton.className = "btnlink";
-		profilebutton.innerText = "Go to Profile";
-		profilebutton.id = "profbtn";
-		document.getElementById("topnav").appendChild(profilebutton);
-		profilebutton.href = "/" + (immune ? "" : "un") + "stable/profile/" + uid + "/";
+		var mutualpath = "/" + (immune ? "" : "un") + "stable/";
+		function btnlink(id, innerText, href) {
+			var element = document.createElement("a");
+			element.className = "btnlink";
+			element.innerText = innerText;
+			element.id = id;
+			document.getElementById("topnav").appendChild(element);
+			element.href = mutualpath + href;
+		}
+		var pathSections = location.pathname.split("/");
+		var filename = pathSections[pathSections.length - 1];
+		var isProfile = pathSections.length == 5;
+		if (isProfile) {
+			btnlink("profbtn", "Go to Profile", "profile/" + uid + "/");
+			btnlink("feedbtn", "Go to Feed", "");
+			btnlink("postbtn", "Create a Post", "post.html");
+		} else if (["", "post.html"].includes(filename)) btnlink("profbtn", "Go to Profile", "profile/" + uid + "/");
 	}
 });
