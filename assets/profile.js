@@ -11,6 +11,19 @@ socket.once("signedInState", function (userID) {
 		profileSettings(userID);
 	}
 	if (userID) signedIn = userID;
+	else {
+		signedIn = false;
+		var loginbtn = document.createElement("a");
+		loginbtn.className = "btnlink";
+		loginbtn.innerText = "Log in";
+		loginbtn.id = "loginbtn";
+		document.getElementById("topnav").appendChild(loginbtn);
+		loginbtn.href = "/" + (immune ? "" : "un") + "stable/login.html";
+	}
+	if (!postDetails) document.getElementById("post").innerHTML = "<i>This user does not have any posts</i>";
+	else {
+		latestPost();
+	}
 });
 function allowFollow(signedIn) {
 	var follow = document.createElement("button");
@@ -42,8 +55,31 @@ if (aboutme) document.getElementById("aboutme").innerText = aboutme;
 else document.getElementById("aboutme").innerHTML = "<i>This user does not have an about me</i>";
 document.getElementById("follows").innerText = follows;
 document.getElementById("theword").innerText = " Follower" + (follows === 1 ? "" : "s");
-if (!postDetails) document.getElementById("post").innerHTML = "<i>This user does not have any posts</i>";
-else {
+function latestPost() {
+	function allowLikes() {
+		var like = document.createElement("button");
+		like.className = "like";
+		like.innerText = "Like";
+		bottomsection.appendChild(like);
+		socket.emit("information", { "isLiked": [signedIn, postDetails.postID] }, function (response) {
+			if (response.err) console.error(err);
+			else {
+				isLiked = response.isFollowing;
+				like.innerText = "Like" + (isLiked ? "d" : "");
+			}
+		});
+		like.innerText = "Like" + (isLiked ? "d" : "");
+		like.onclick = function () {
+			socket.emit("like", [signedIn, postDetails.postID], function (response) {
+				if (response.success) {
+					numoflikes = response.likes;
+					isLiked = response.isLiked;
+					like.innerText = "Like" + (isLiked ? "d" : "");
+					likes.innerText = numoflikes + " Like" + (numoflikes === 1 ? "" : "s");
+				}
+			});
+		};
+	}
 	var post = document.getElementById("post");
 	var topsection = document.createElement("div");
 	var poster = document.createElement("div");
@@ -51,11 +87,13 @@ else {
 	var time = new Date(postDetails.time);
 	var content = document.createElement("div");
 	var bottomsection = document.createElement("div");
-	var like = document.createElement("button");
 	var likes = document.createElement("span");
 	var AMPM = time.getHours() % 12 == time.getHours() ? "AM" : "PM";
 	var numoflikes = postDetails.likes;
 	var isLiked;
+	if (signedIn) {
+		allowLikes();
+	}
 	topsection.className = "topsection";
 	post.appendChild(topsection);
 	poster.className = "posterusername";
@@ -69,30 +107,9 @@ else {
 	post.appendChild(content);
 	bottomsection.className = "bottomsection";
 	post.appendChild(bottomsection);
-	like.className = "like";
-	like.innerText = "Like";
-	bottomsection.appendChild(like);
 	likes.className = "likes";
 	likes.innerText = numoflikes + " Like" + (numoflikes === 1 ? "" : "s");
 	bottomsection.appendChild(likes);
-	socket.emit("information", { "isLiked": [signedIn, postDetails.postID] }, function (response) {
-		if (response.err) console.error(err);
-		else {
-			isLiked = response.isFollowing;
-			like.innerText = "Like" + (isLiked ? "d" : "");
-		}
-	});
-	like.innerText = "Like" + (isLiked ? "d" : "");
-	like.onclick = function () {
-		socket.emit("like", [signedIn, postDetails.postID], function (response) {
-			if (response.success) {
-				numoflikes = response.likes;
-				isLiked = response.isLiked;
-				like.innerText = "Like" + (isLiked ? "d" : "");
-				likes.innerText = numoflikes + " Like" + (numoflikes === 1 ? "" : "s");
-			}
-		});
-	};
 }
 function profileSettings(signedIn) {
 	document.getElementById("profbtn").remove();

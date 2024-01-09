@@ -17,7 +17,7 @@ const exportedPrivateKeyBuffer = privateKey.export({
 	type: 'pkcs1',
 	format: 'pem',
 });
-fs.writeFileSync('../.data/private.pem', exportedPrivateKeyBuffer, 'utf-8');
+fs.writeFileSync('../.data/private-key.pem', exportedPrivateKeyBuffer, 'utf-8');
 */
 
 
@@ -28,7 +28,7 @@ It contains more than one line and is a message.
 It is the time for something to happen.`;
 
 const privateKey = Buffer.from(
-	fs.readFileSync('../.data/private.pem', 'utf-8')
+	fs.readFileSync('../.data/private-key.pem', 'utf-8')
 );
 
 const encryptedData = crypto.privateEncrypt(
